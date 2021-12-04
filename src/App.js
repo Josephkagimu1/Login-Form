@@ -1,24 +1,50 @@
 import React, { useState } from 'react';
-import Card from "./Card";
-import Data from "./Data";
 import './App.css';
+import LoginForm from './components/LoginForm';
 
 function App() {
-const [active, setActive] = useState("FirstCard");
+  const adminUser = {
+    email: "admin@admin.com",
+    password: "admin"
+  }
+
+  const [user, setUser] = useState({name: "", email: ""});
+  const [error, setError] = useState("");
+
+  const Login = details => {
+    console.log(details);
+
+    if (details.email == adminUser.email && details.password == adminUser.password){
+      console.log("Logged in");
+      setUser({
+        name: details.name,
+        email: details.email
+      })
+    } else {
+      console.log("Details do not match !");
+      setError("Details do not match !");
+    }
+  }
+
+  const Logout = () => {
+    setUser({name: "", email: ""})
+  }
 
   return (
     <div className="App">
-      <nav>
-        <button onClick={() => setActive("FirstCard")}>One</button>
-        <button onClick={() => setActive("SecondCard")}>Two</button>
-        <button onClick={() => setActive("ThirdCard")}>Three</button>
-      </nav>
+      {(user.email != "") ? (
+        <div className="welcome">
+          <h2>Welcome, <span> {user.name} </span></h2>
+          <button onClick={Logout} >Logout</button>
+        </div>
+      ) : (
+        <LoginForm Login={Login} error={error} />
+      ) }
 
-      <div>
-        {active === "FirstCard" && <Card data={Data} cardIndex={0} />}
-        {active === "SecondCard" && <Card data={Data} cardIndex={1} />}
-        {active === "ThirdCard" && <Card data={Data} cardIndex={2} />}
-        
+      <div className="enter">
+        <h3>Insert this information:</h3>
+        <p>Email: admin@admin.com</p>
+        <p>Password: admin </p>
       </div>
     </div>
   );
